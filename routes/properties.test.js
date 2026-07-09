@@ -26,3 +26,11 @@ test("validateQuery rejects invalid pagination and numeric filters", () => {
   assert.throws(() => _test.validateQuery({ limit: "200" }), /limit/);
   assert.throws(() => _test.validateQuery({ minPrice: "abc" }), /minPrice/);
 });
+
+test("validateListingId accepts normal listing IDs and rejects malformed IDs", () => {
+  assert.equal(_test.validateListingId("1174572339"), "1174572339");
+
+  assert.throws(() => _test.validateListingId("abc123"), /digits/);
+  assert.throws(() => _test.validateListingId(""), /digits/);
+  assert.throws(() => _test.validateListingId("1".repeat(21)), /20 digits/);
+});

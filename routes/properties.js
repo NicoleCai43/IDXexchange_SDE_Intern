@@ -5,6 +5,7 @@ const router = express.Router();
 
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
+const MAX_LISTING_ID_LENGTH = 20;
 
 const ALLOWED_QUERY_PARAMS = new Set([
   "city",
@@ -67,6 +68,22 @@ function parseRequiredText(value, name) {
   return parsed;
 }
 
+function validateListingId(value) {
+  const listingId = String(value ?? "").trim();
+
+  if (!/^\d+$/.test(listingId)) {
+    throw new Error("listing ID must contain only digits");
+  }
+
+  if (listingId.length > MAX_LISTING_ID_LENGTH) {
+    throw new Error(
+      `listing ID must be ${MAX_LISTING_ID_LENGTH} digits or fewer`
+    );
+  }
+
+  return listingId;
+}
+
 function validateQuery(query) {
   const unknownParams = Object.keys(query).filter(
     (key) => !ALLOWED_QUERY_PARAMS.has(key)
@@ -105,6 +122,15 @@ function validateQuery(query) {
     limit,
     offset,
   };
+}
+
+async function findPropertyByListingId(listingId) {
+  const [rows] = await pool.query(
+    "SELECT * FROM rets_property WHERE L_ListingID = ? LIMIT 1",
+    [listingId]
+  );
+
+  return rows[0];
 }
 
 function buildPropertyQuery(filters) {
@@ -152,6 +178,76 @@ function buildPropertyQuery(filters) {
   };
 }
 
+router.get("/:id/openhouses", async (req, res) => {
+  let listingId;
+
+  try {
+    listingId = validateListingId(req.params.id);
+  } catch (error) {
+    return res.status(400).json({
+      error: "Invalid listing ID",
+      message: error.message,
+    });
+  }
+
+  try {
+    const property = await findPropertyByListingId(listingId);
+
+    if (!property) {
+      return res.status(404).json({
+        error: "Property not found",
+        message: `No property found for listing ID ${listingId}`,
+      });
+    }
+
+    const [openhouses] = await pool.query(
+      `SELECT *
+       FROM rets_openhouse
+       WHERE L_ListingID = ?
+       ORDER BY OpenHouseDate ASC, OH_StartTime ASC`,
+      [listingId]
+    );
+
+    return res.status(200).json(openhouses);
+  } catch (error) {
+    return res.status(500).json({
+      error: "Failed to fetch open houses",
+      message: error.message,
+    });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  let listingId;
+
+  try {
+    listingId = validateListingId(req.params.id);
+  } catch (error) {
+    return res.status(400).json({
+      error: "Invalid listing ID",
+      message: error.message,
+    });
+  }
+
+  try {
+    const property = await findPropertyByListingId(listingId);
+
+    if (!property) {
+      return res.status(404).json({
+        error: "Property not found",
+        message: `No property found for listing ID ${listingId}`,
+      });
+    }
+
+    return res.status(200).json(property);
+  } catch (error) {
+    return res.status(500).json({
+      error: "Failed to fetch property",
+      message: error.message,
+    });
+  }
+});
+
 router.get("/", async (req, res) => {
   let filters;
 
@@ -188,5 +284,6 @@ router.get("/", async (req, res) => {
 module.exports = router;
 module.exports._test = {
   buildPropertyQuery,
+  validateListingId,
   validateQuery,
 };
