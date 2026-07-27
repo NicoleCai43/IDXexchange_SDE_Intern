@@ -1,0 +1,10 @@
+node_modules
+.env
+backend/node_modules
+backend/.env
+frontend/dist
+frontend/*.log
+
+*.sql
+*.pdf
+*.exe

@@ -1,0 +1,27 @@
+{
+  "name": "idx-property-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 3000",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "proxy": "http://localhost:5000",
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.4",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.6.0",
+    "jsdom": "^23.0.0",
+    "vitest": "^1.5.6"
+  }
+}
