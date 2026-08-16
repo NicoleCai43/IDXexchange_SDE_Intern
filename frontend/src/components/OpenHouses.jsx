@@ -4,7 +4,8 @@ function parseAllDataRemarks(raw) {
   if (!raw) return null;
   try {
     const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
-    return parsed?.OpenHouseRemarks ?? null;
+    // Accept multiple possible keys and nested structures defensively
+    return parsed?.OpenHouseRemarks ?? parsed?.openHouseRemarks ?? parsed?.remarks ?? null;
   } catch {
     return null;
   }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function parsePhotos(rawPhotos) {
   if (!rawPhotos) return [];
@@ -17,6 +17,8 @@ export default function PropertyImageGallery({ photosRaw }) {
   const [mainIndex, setMainIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
+  const lightboxInnerRef = useRef(null);
+
   useEffect(() => {
     function onKey(e) {
       if (!lightboxOpen) return;
@@ -27,6 +29,10 @@ export default function PropertyImageGallery({ photosRaw }) {
 
     if (lightboxOpen) {
       window.addEventListener("keydown", onKey);
+      // focus inner container for keyboard users
+      setTimeout(() => {
+        lightboxInnerRef.current?.focus();
+      }, 0);
       return () => window.removeEventListener("keydown", onKey);
     }
   }, [lightboxOpen, photos.length]);
@@ -51,8 +57,13 @@ export default function PropertyImageGallery({ photosRaw }) {
 
       {lightboxOpen ? (
         <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxOpen(false)}>
-          <div className="lightbox-inner" onClick={(e) => e.stopPropagation()}>
-            <button className="lightbox-close" onClick={() => setLightboxOpen(false)}>✕</button>
+          <div
+            className="lightbox-inner"
+            onClick={(e) => e.stopPropagation()}
+            ref={lightboxInnerRef}
+            tabIndex={-1}
+          >
+            <button className="lightbox-close" onClick={() => setLightboxOpen(false)} aria-label="Close">✕</button>
             <img src={photos[mainIndex]} alt={`Lightbox ${mainIndex + 1}`} />
             <div className="lightbox-controls">
               <button onClick={() => setMainIndex((i) => Math.max(i - 1, 0))} aria-label="Previous">‹</button>

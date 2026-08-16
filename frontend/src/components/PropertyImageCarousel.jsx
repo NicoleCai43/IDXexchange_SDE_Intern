@@ -29,8 +29,8 @@ export default function PropertyImageCarousel({ photosRaw, onClick }) {
   }
 
   return (
-    <div className="carousel" onClick={onClick} role="button" tabIndex={0}>
-      <div className="photo-frame">
+    <div className="carousel">
+      <div className="photo-frame" onClick={onClick}>
         <img src={photos[index]} alt={`Photo ${index + 1}`} />
       </div>
 
