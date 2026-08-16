@@ -16,6 +16,17 @@ const ALLOWED_QUERY_PARAMS = new Set([
   "baths",
   "limit",
   "offset",
+  "sortBy",
+  "sortOrder",
+]);
+
+// Whitelist actual SQL column names that sorting may be performed on.
+// These must match the real column names in the rets_property table.
+const SORT_WHITELIST = new Set([
+  "L_SystemPrice",
+  "L_ListingDate",
+  "LM_Int2_3",
+  "L_Keyword2",
 ]);
 
 function parsePositiveInteger(value, name, { min = 0, max } = {}) {
@@ -101,6 +112,22 @@ function validateQuery(query) {
   const offset =
     parsePositiveInteger(query.offset, "offset", { min: 0 }) ?? 0;
 
+  let sortBy = undefined;
+  if (query.sortBy !== undefined) {
+    sortBy = String(query.sortBy).trim();
+    if (!SORT_WHITELIST.has(sortBy)) {
+      throw new Error(`Unsupported sortBy value: ${sortBy}`);
+    }
+  }
+
+  let sortOrder = undefined;
+  if (query.sortOrder !== undefined) {
+    sortOrder = String(query.sortOrder).toLowerCase();
+    if (sortOrder !== "asc" && sortOrder !== "desc") {
+      throw new Error(`sortOrder must be 'asc' or 'desc'`);
+    }
+  }
+
   const minPrice = parseNonNegativeNumber(query.minPrice, "minPrice");
   const maxPrice = parseNonNegativeNumber(query.maxPrice, "maxPrice");
 
@@ -121,6 +148,8 @@ function validateQuery(query) {
     baths: parseNonNegativeNumber(query.baths, "baths"),
     limit,
     offset,
+    sortBy,
+    sortOrder,
   };
 }
 
@@ -170,10 +199,17 @@ function buildPropertyQuery(filters) {
   const whereSql =
     whereClauses.length > 0 ? ` WHERE ${whereClauses.join(" AND ")}` : "";
 
+  let orderSql = " ORDER BY id ASC";
+
+  if (filters.sortBy) {
+    const order = filters.sortOrder === "desc" ? "DESC" : "ASC";
+    orderSql = ` ORDER BY ${filters.sortBy} ${order}`;
+  }
+
   return {
     countSql: `SELECT COUNT(*) AS total FROM rets_property${whereSql}`,
     countValues: [...filterValues],
-    resultsSql: `SELECT * FROM rets_property${whereSql} ORDER BY id ASC LIMIT ? OFFSET ?`,
+    resultsSql: `SELECT * FROM rets_property${whereSql}${orderSql} LIMIT ? OFFSET ?`,
     resultsValues: [...filterValues, filters.limit, filters.offset],
   };
 }

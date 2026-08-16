@@ -34,3 +34,17 @@ test("validateListingId accepts normal listing IDs and rejects malformed IDs", (
   assert.throws(() => _test.validateListingId(""), /digits/);
   assert.throws(() => _test.validateListingId("1".repeat(21)), /20 digits/);
 });
+
+test("validateQuery rejects unknown sortBy and invalid sortOrder", () => {
+  assert.throws(() => _test.validateQuery({ sortBy: 'Bad_Column' }), /Unsupported sortBy/);
+  assert.throws(() => _test.validateQuery({ sortBy: 'L_SystemPrice', sortOrder: 'down' }), /sortOrder/);
+  const filters = _test.validateQuery({ sortBy: 'L_SystemPrice', sortOrder: 'DESC' });
+  assert.equal(filters.sortBy, 'L_SystemPrice');
+  assert.equal(filters.sortOrder, 'desc');
+});
+
+test("buildPropertyQuery includes ORDER BY when sortBy provided", () => {
+  const filters = _test.validateQuery({ sortBy: 'L_SystemPrice', sortOrder: 'asc', limit: '10', offset: '0' });
+  const q = _test.buildPropertyQuery(filters);
+  assert.ok(q.resultsSql.includes('ORDER BY L_SystemPrice ASC'));
+});

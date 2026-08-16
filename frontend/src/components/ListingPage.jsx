@@ -12,6 +12,8 @@ export default function ListingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filters, setFilters] = useState({});
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const requestIdRef = useRef(0);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_LIMIT));
@@ -27,6 +29,8 @@ export default function ListingPage() {
       const data = await fetchProperties({
         limit: PAGE_LIMIT,
         offset: (pageNumber - 1) * PAGE_LIMIT,
+        sortBy: params.sortBy ?? sortBy,
+        sortOrder: params.sortOrder ?? sortOrder,
         ...params,
       });
 
@@ -61,6 +65,9 @@ export default function ListingPage() {
 
   function handleSearch(nextFilters) {
     setFilters(nextFilters);
+    // Reset sorting when filters change per requirements
+    setSortBy("");
+    setSortOrder("asc");
     loadProperties(nextFilters, 1);
   }
 
@@ -74,7 +81,21 @@ export default function ListingPage() {
       return;
     }
 
-    loadProperties(filters, nextPage);
+    loadProperties({ ...filters, sortBy, sortOrder }, nextPage);
+  }
+
+  function handleSortChange(nextSortBy) {
+    // If changing sort field, reset to page 1
+    setSortBy(nextSortBy);
+    setPage(1);
+    loadProperties({ ...filters, sortBy: nextSortBy, sortOrder }, 1);
+  }
+
+  function toggleSortOrder() {
+    const next = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(next);
+    setPage(1);
+    loadProperties({ ...filters, sortBy, sortOrder: next }, 1);
   }
 
   function getPageItems(totalPages, currentPage) {
@@ -113,6 +134,22 @@ export default function ListingPage() {
         onSearch={handleSearch}
         onClear={handleClear}
       />
+
+      <div className="sort-controls" style={{ marginBottom: 12 }}>
+        <label style={{ marginRight: 8 }}>
+          Sort by:
+          <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)} style={{ marginLeft: 8 }}>
+            <option value="">Default</option>
+            <option value="L_SystemPrice">Price</option>
+            <option value="L_ListingDate">Date Listed</option>
+            <option value="LM_Int2_3">Square Footage</option>
+            <option value="L_Keyword2">Beds</option>
+          </select>
+        </label>
+        <button type="button" onClick={toggleSortOrder} style={{ marginLeft: 8 }} aria-pressed={sortOrder === 'desc'}>
+          {sortOrder === "asc" ? "Asc" : "Desc"}
+        </button>
+      </div>
 
       {loading ? (
         <section className="state-panel">Loading properties...</section>
