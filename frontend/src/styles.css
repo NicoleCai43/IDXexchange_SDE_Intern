@@ -237,3 +237,60 @@ h1 {
   background: #eef3f7;
   color: #22303a;
 }
+
+/* Site-wide pagination fixed to bottom */
+.site-pagination {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, rgba(244,246,248,0.9), rgba(244,246,248,0.98));
+  border-top: 1px solid #e1e6ea;
+  z-index: 60;
+}
+
+.pagination-controls {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #cbd2d9;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #22303a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.page-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.page-btn.active {
+  background: #0f6b57;
+  color: #ffffff;
+  border-color: #0f6b57;
+}
+
+.ellipsis {
+  display: inline-block;
+  padding: 0 8px;
+  color: #4b5560;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .site-pagination {
+    padding: 8px;
+  }
+  .page-btn { min-width: 30px; height: 32px; }
+}
