@@ -21,6 +21,15 @@ const indexes = [
     name: "idx_rets_property_baths",
     sql: "CREATE INDEX idx_rets_property_baths ON rets_property (LM_Dec_3)",
   },
+  // Composite indexes for common queries
+  {
+    name: "idx_rets_property_city_price_beds",
+    sql: "CREATE INDEX idx_rets_property_city_price_beds ON rets_property (L_City, L_SystemPrice, L_Keyword2)",
+  },
+  {
+    name: "idx_rets_property_price_date",
+    sql: "CREATE INDEX idx_rets_property_price_date ON rets_property (L_SystemPrice, L_ListingDate)",
+  },
 ];
 
 async function indexExists(indexName) {
