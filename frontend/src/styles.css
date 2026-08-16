@@ -240,16 +240,13 @@ h1 {
 
 /* Site-wide pagination fixed to bottom */
 .site-pagination {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: static;
   display: flex;
   justify-content: center;
-  padding: 10px 12px;
-  background: linear-gradient(180deg, rgba(244,246,248,0.9), rgba(244,246,248,0.98));
-  border-top: 1px solid #e1e6ea;
-  z-index: 60;
+  padding: 18px 12px;
+  margin-top: 28px;
+  background: transparent;
+  border-top: 1px solid transparent;
 }
 
 .pagination-controls {
