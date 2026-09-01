@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export default function PropertyMap({ lat, lng, label }) {
   if (!lat || !lng) return null;
 
@@ -23,3 +25,9 @@ export default function PropertyMap({ lat, lng, label }) {
     </div>
   );
 }
+
+PropertyMap.propTypes = {
+  lat: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  lng: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  label: PropTypes.string
+};

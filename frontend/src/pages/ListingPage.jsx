@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchProperties } from "../api/client.js";
-import PropertyCard from "./PropertyCard.jsx";
-import PropertyFilters from "./PropertyFilters.jsx";
+import PropertyCard from "../components/PropertyCard.jsx";
+import PropertyFilters from "../components/PropertyFilters.jsx";
 
 const PAGE_LIMIT = 20;
 
@@ -57,9 +57,10 @@ export default function ListingPage() {
         setLoading(false);
       }
     }
-  }, []);
+  }, [sortBy, sortOrder]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadProperties();
   }, [loadProperties]);
 
@@ -141,7 +142,6 @@ export default function ListingPage() {
           <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)} style={{ marginLeft: 8 }}>
             <option value="">Default</option>
             <option value="L_SystemPrice">Price</option>
-            <option value="L_ListingDate">Date Listed</option>
             <option value="LM_Int2_3">Square Footage</option>
             <option value="L_Keyword2">Beds</option>
           </select>

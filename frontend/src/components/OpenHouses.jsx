@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import PropTypes from "prop-types";
 
 function parseAllDataRemarks(raw) {
   if (!raw) return null;
@@ -35,3 +35,16 @@ export default function OpenHouses({ list }) {
     </div>
   );
 }
+
+OpenHouses.propTypes = {
+  list: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      OpenHouseID: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      OpenHouseDate: PropTypes.string,
+      OH_StartTime: PropTypes.string,
+      OH_EndTime: PropTypes.string,
+      all_data: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+    })
+  )
+};

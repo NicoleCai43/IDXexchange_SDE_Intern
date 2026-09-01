@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const bedOptions = ["", "1", "2", "3", "4", "5+"];
 const bathOptions = ["", "1", "2", "3", "4+"];
@@ -128,3 +129,16 @@ export default function PropertyFilters({ initialFilters, onSearch, onClear }) {
     </section>
   );
 }
+
+PropertyFilters.propTypes = {
+  initialFilters: PropTypes.shape({
+    city: PropTypes.string,
+    zip: PropTypes.string,
+    minPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    maxPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    beds: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    baths: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  }).isRequired,
+  onSearch: PropTypes.func.isRequired,
+  onClear: PropTypes.func.isRequired
+};

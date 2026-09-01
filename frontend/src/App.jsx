@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ListingPage from "./components/ListingPage.jsx";
-import PropertyDetailPage from "./components/PropertyDetailPage.jsx";
+import ListingPage from "./pages/ListingPage.jsx";
+import PropertyDetailPage from "./pages/PropertyDetailPage.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 export default function App() {

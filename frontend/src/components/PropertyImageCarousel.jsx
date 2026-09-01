@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 function parsePhotos(rawPhotos) {
   if (!rawPhotos) return [];
@@ -44,3 +45,8 @@ export default function PropertyImageCarousel({ photosRaw, onClick }) {
     </div>
   );
 }
+
+PropertyImageCarousel.propTypes = {
+  photosRaw: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  onClick: PropTypes.func
+};
