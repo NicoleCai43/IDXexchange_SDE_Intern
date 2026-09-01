@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -11,7 +12,7 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    // Could send to external logging service here
+    // eslint-disable-next-line no-console
     console.error("ErrorBoundary caught:", error, info);
   }
 
@@ -29,3 +30,7 @@ export default class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired,
+};

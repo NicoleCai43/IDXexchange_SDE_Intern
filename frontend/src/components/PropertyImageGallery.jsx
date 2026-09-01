@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 
 function parsePhotos(rawPhotos) {
   if (!rawPhotos) return [];
@@ -76,3 +77,7 @@ export default function PropertyImageGallery({ photosRaw }) {
     </div>
   );
 }
+
+PropertyImageGallery.propTypes = {
+  photosRaw: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+};

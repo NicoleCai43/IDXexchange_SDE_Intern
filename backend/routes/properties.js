@@ -24,7 +24,6 @@ const ALLOWED_QUERY_PARAMS = new Set([
 // These must match the real column names in the rets_property table.
 const SORT_WHITELIST = new Set([
   "L_SystemPrice",
-  "L_ListingDate",
   "LM_Int2_3",
   "L_Keyword2",
 ]);
