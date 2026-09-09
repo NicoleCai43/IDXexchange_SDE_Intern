@@ -1,8 +1,6 @@
 const express = require("express");
 const pool = require("../db");
 
-const router = express.Router();
-
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 const MAX_LISTING_ID_LENGTH = 20;
@@ -152,21 +150,12 @@ function validateQuery(query) {
   };
 }
 
-async function findPropertyByListingId(listingId) {
-  const [rows] = await pool.query(
-    "SELECT * FROM rets_property WHERE L_ListingID = ? LIMIT 1",
-    [listingId]
-  );
-
-  return rows[0];
-}
-
 function buildPropertyQuery(filters) {
   const whereClauses = [];
   const filterValues = [];
 
   if (filters.city !== undefined) {
-    whereClauses.push("L_City = ?");
+    whereClauses.push("LOWER(L_City) = LOWER(?)");
     filterValues.push(filters.city);
   }
 
@@ -213,6 +202,18 @@ function buildPropertyQuery(filters) {
   };
 }
 
+function createPropertiesRouter(database = pool) {
+  const router = express.Router();
+
+  async function findPropertyByListingId(listingId) {
+    const [rows] = await database.query(
+      "SELECT * FROM rets_property WHERE L_ListingID = ? LIMIT 1",
+      [listingId]
+    );
+
+    return rows[0];
+  }
+
 router.get("/:id/openhouses", async (req, res) => {
   let listingId;
 
@@ -235,7 +236,7 @@ router.get("/:id/openhouses", async (req, res) => {
       });
     }
 
-    const [openhouses] = await pool.query(
+    const [openhouses] = await database.query(
       `SELECT *
        FROM rets_openhouse
        WHERE L_ListingID = ?
@@ -299,8 +300,8 @@ router.get("/", async (req, res) => {
     buildPropertyQuery(filters);
 
   try {
-    const [[countRow]] = await pool.query(countSql, countValues);
-    const [results] = await pool.query(resultsSql, resultsValues);
+    const [[countRow]] = await database.query(countSql, countValues);
+    const [results] = await database.query(resultsSql, resultsValues);
 
     return res.status(200).json({
       total: Number(countRow.total),
@@ -316,7 +317,13 @@ router.get("/", async (req, res) => {
   }
 });
 
+  return router;
+}
+
+const router = createPropertiesRouter();
+
 module.exports = router;
+module.exports.createPropertiesRouter = createPropertiesRouter;
 module.exports._test = {
   buildPropertyQuery,
   validateListingId,

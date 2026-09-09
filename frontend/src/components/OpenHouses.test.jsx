@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import OpenHouses from './OpenHouses.jsx';
 
@@ -8,5 +8,11 @@ describe('OpenHouses', () => {
     const { getByText } = render(<OpenHouses list={oh} />);
     expect(getByText('Open Houses')).toBeTruthy();
     expect(getByText('Be nice')).toBeTruthy();
+  });
+
+  it('uses a fallback for malformed open-house dates', () => {
+    render(<OpenHouses list={[{ id: "bad", OpenHouseDate: "not-a-date" }]} />);
+
+    expect(screen.getByText("Date unavailable")).toBeInTheDocument();
   });
 });

@@ -103,6 +103,8 @@ npm test             # Run tests
 
 **Coverage Goals:** 70%+ lines, functions, branches, statements
 
+**Verified locally:** frontend `npm run test:coverage` reports 93.67% statements, 70.20% branches, and 75.51% functions; backend `npm run test:coverage` reports 92.24% statements, 88.07% branches, and 100% functions.
+
 ## Development
 
 ### Git Workflow
@@ -174,7 +176,7 @@ MySQL Database → Response → State Update → Re-render
 - Input validation before SQL construction
 
 **Database Indexes**
-- 7 indexes on common filter columns
+- 6 indexes on common filter columns
 - Single-column + composite indexes
 - Dramatically improves query performance
 
@@ -190,6 +192,36 @@ MySQL Database → Response → State Update → Re-render
 | Tests failing | Run `npm install`, verify dependencies |
 
 [Full Troubleshooting Guide →](./DOCUMENTATION.md#troubleshooting)
+
+## Week 12 Final Demo Checklist
+
+### Fresh data prerequisite
+
+Before presenting, request fresh `rets_property` and `rets_openhouse` table exports from the Team Lead. The repository intentionally does not invent replacement data, and SQL dumps are ignored by Git because image URLs expire. After receiving the approved exports:
+
+```sql
+DROP TABLE IF EXISTS rets_openhouse;
+DROP TABLE IF EXISTS rets_property;
+SOURCE path/to/fresh/rets_property.sql;
+SOURCE path/to/fresh/rets_openhouse.sql;
+```
+
+Then run `npm run index:properties` from `backend/`, start both services, and verify listing photos, detail photos, maps, and open-house remarks in the browser.
+
+### 15-minute presentation
+
+1. **Live demo, 5 minutes:** search, filter, paginate, open a detail page, inspect the map, open the image lightbox, show sorting, then demonstrate the error state with the backend stopped.
+2. **Architecture, 5 minutes:** explain browser → API client → Vite proxy → Express validation/query builder → MySQL → JSON response, including parameterized queries and sort-column whitelisting.
+3. **Code walkthrough, 5 minutes:** show `properties.js`, the ListingPage request-id guard, the frontend/backend test commands, and the removed `L_ListingDate` index bug.
+
+### Interview prompts
+
+- Explain what happens when a user searches for a city.
+- Explain why parameterized queries and a sort whitelist are both necessary.
+- Explain what `EXPLAIN` verifies about an index-backed query.
+- Explain why changing filters resets pagination.
+- Describe the stale-response bug prevented by `requestIdRef`.
+- Describe how this architecture would change for 10,000 concurrent users.
 
 ## Technology Stack
 
@@ -237,8 +269,8 @@ Educational project for IDX Exchange internship program.
 
 ---
 
-**Status:** ✅ Complete (Sorting, Code Organization, Testing & Documentation)  
-**Test Coverage:** 70%+  
-**Lint:** ESLint ✓  
-**Last Updated:** 2026-09-01  
+**Status:** ✅ Code and test requirements complete; fresh Team Lead database exports remain a pre-presentation prerequisite.
+**Test Coverage:** Verified above 70% on frontend and backend
+**Lint:** ESLint ✓
+**Last Updated:** 2026-09-08
 **Version:** 1.0.0

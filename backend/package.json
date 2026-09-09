@@ -7,6 +7,7 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "test": "node --test",
+    "test:coverage": "c8 --check-coverage --lines 70 --functions 70 --branches 70 --statements 70 --exclude 'db.js' --exclude 'server.js' node --test",
     "index:properties": "node scripts/createPropertyIndexes.js"
   },
   "keywords": [],
@@ -20,6 +21,7 @@
     "mysql2": "^3.22.5"
   },
   "devDependencies": {
+    "c8": "^12.0.0",
     "jest": "^30.5.1",
     "nodemon": "^3.1.14",
     "supertest": "^7.2.2"

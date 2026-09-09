@@ -23,4 +23,13 @@ describe('PropertyImageGallery', () => {
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(queryByRole('dialog')).toBeNull();
   });
+
+  it('ignores malformed photo entries instead of rendering invalid sources', () => {
+    const { getByAltText, queryByAltText } = render(
+      <PropertyImageGallery photosRaw={JSON.stringify(["valid.jpg", null, 42, ""])} />
+    );
+
+    expect(getByAltText("Main photo 1")).toHaveAttribute("src", "valid.jpg");
+    expect(queryByAltText("Main photo 2")).toBeNull();
+  });
 });

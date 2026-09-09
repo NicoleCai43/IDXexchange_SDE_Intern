@@ -51,8 +51,8 @@ export default function PropertyDetailPage() {
   if (!property) return <main className="page-shell"><section className="state-panel">Property not found</section></main>;
 
   const photos = property.L_Photos;
-  const lat = property.LMD_MP_Latitude ?? property.LMD_MP_Lat ?? property.LMD_MP_Latitude;
-  const lng = property.LMD_MP_Longitude ?? property.LMD_MP_Long ?? property.LMD_MP_Longitude;
+  const lat = property.LMD_MP_Latitude ?? property.LMD_MP_Lat;
+  const lng = property.LMD_MP_Longitude ?? property.LMD_MP_Long;
 
   return (
     <main className="page-shell">

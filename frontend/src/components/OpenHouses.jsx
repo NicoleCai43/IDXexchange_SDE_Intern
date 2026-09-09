@@ -25,7 +25,7 @@ export default function OpenHouses({ list }) {
         {items.map((oh) => (
           <li key={oh.id || oh.OpenHouseID}>
             <div>
-              <strong>{new Date(oh.OpenHouseDate).toLocaleDateString()}</strong>
+              <strong>{formatOpenHouseDate(oh.OpenHouseDate)}</strong>
               <div>{oh.OH_StartTime || ""} - {oh.OH_EndTime || ""}</div>
             </div>
             <div className="oh-remarks">{parseAllDataRemarks(oh.all_data) || ""}</div>
@@ -34,6 +34,11 @@ export default function OpenHouses({ list }) {
       </ul>
     </div>
   );
+}
+
+function formatOpenHouseDate(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "Date unavailable" : date.toLocaleDateString();
 }
 
 OpenHouses.propTypes = {

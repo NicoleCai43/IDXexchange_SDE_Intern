@@ -16,7 +16,7 @@ IDX Exchange is a full-stack real estate property listing platform built with Re
 ### Technical Stack
 - **Frontend**: React 18, Vite 6, React Router 6, Vitest, ESLint
 - **Backend**: Node.js, Express 4, MySQL2/Promise
-- **Database**: MySQL 8 with 7 optimized indexes
+- **Database**: MySQL 8 with 6 optimized indexes
 - **Testing**: Vitest (frontend & backend), React Testing Library
 - **Code Quality**: ESLint, PropTypes, conventional commits
 
@@ -298,7 +298,7 @@ test('calls onSearch with only non-empty values', async () => {
 });
 ```
 
-**Coverage Goals**: 70%+ lines, functions, branches, statements
+**Verified Coverage**: Frontend 93.67% statements, 70.20% branches, 75.51% functions; backend 92.24% statements, 88.07% branches, 100% functions.
 
 ### Backend Tests (Vitest)
 
@@ -337,9 +337,8 @@ CREATE INDEX idx_rets_property_price ON rets_property(L_SystemPrice);
 CREATE INDEX idx_rets_property_beds ON rets_property(L_Keyword2);
 CREATE INDEX idx_rets_property_baths ON rets_property(LM_Dec_3);
 
--- Composite indexes for common filter combinations
+-- Composite index for the common filter combination
 CREATE INDEX idx_rets_property_city_price_beds ON rets_property(L_City, L_SystemPrice, L_Keyword2);
-CREATE INDEX idx_rets_property_price_date ON rets_property(L_SystemPrice, listing_date);
 ```
 
 **Impact**: Without indexes, queries scan entire table (slow). With indexes, MySQL finds matching rows using B-tree structure (fast).

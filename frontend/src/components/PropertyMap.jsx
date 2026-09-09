@@ -1,10 +1,21 @@
 import PropTypes from "prop-types";
 
 export default function PropertyMap({ lat, lng, label }) {
-  if (!lat || !lng) return null;
+  const latitude = Number(lat);
+  const longitude = Number(lng);
 
-  const key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "";
-  const q = `${lat},${lng}`;
+  const missingLatitude = lat === null || lat === undefined || lat === "";
+  const missingLongitude = lng === null || lng === undefined || lng === "";
+
+  if (
+    missingLatitude ||
+    missingLongitude ||
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude)
+  ) return null;
+
+  const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+  const q = `${latitude},${longitude}`;
   const src = key
     ? `https://www.google.com/maps/embed/v1/place?key=${key}&q=${encodeURIComponent(q)}&zoom=15`
     : `https://www.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;

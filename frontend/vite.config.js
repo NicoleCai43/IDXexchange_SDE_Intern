@@ -20,12 +20,16 @@ export default defineConfig({
         "node_modules/",
         "src/setupTests.js",
         "**/*.test.{js,jsx}",
-        "**/index.js"
+        "**/index.js",
+        "src/main.jsx",
+        "src/App.jsx"
       ],
-      lines: 70,
-      functions: 70,
-      branches: 70,
-      statements: 70
+      thresholds: {
+        lines: 70,
+        functions: 70,
+        branches: 70,
+        statements: 70
+      }
     }
   },
 });

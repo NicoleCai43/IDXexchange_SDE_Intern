@@ -3,11 +3,13 @@ import PropTypes from "prop-types";
 
 function parsePhotos(rawPhotos) {
   if (!rawPhotos) return [];
-  if (Array.isArray(rawPhotos)) return rawPhotos.filter(Boolean);
+  if (Array.isArray(rawPhotos)) {
+    return rawPhotos.filter((photo) => typeof photo === "string" && photo.trim());
+  }
   try {
     const parsed = JSON.parse(rawPhotos);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter(Boolean);
+    return parsed.filter((photo) => typeof photo === "string" && photo.trim());
   } catch {
     return [];
   }
